@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WizardG – Developer & Weather</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #eef2f3;
+      text-align: center;
+      padding: 2rem;
+    }
+    .weather {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 8px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hi, I'm WizardG 👋</h1>
+  <p>Beginner programmer exploring HTML, CSS, and JavaScript.</p>
+  <p>Let's build something awesome together!</p>
+
+  <div class="weather">
+    <h2>Current Weather</h2>
+    <p id="location">Loading location...</p>
+    <p id="temperature"></p>
+    <p id="description"></p>
+  </div>
+
+  <script>
+    async function getWeather() {
+      try {
+        const pos = await new Promise((resolve, reject) =>
+          navigator.geolocation.getCurrentPosition(resolve, reject)
+        );
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+
+        const apiKey = "YOUR_API_KEY"; // pl. OpenWeatherMap API
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        document.getElementById("location").textContent = data.name;
+        document.getElementById("temperature").textContent = `${data.main.temp} °C`;
+        document.getElementById("description").textContent = data.weather[0].description;
+      } catch (error) {
+        document.getElementById("location").textContent = "Unable to fetch weather.";
+      }
+    }
+
+    getWeather();
+  </script>
+</body>
+</html>
